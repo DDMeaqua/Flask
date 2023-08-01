@@ -12,7 +12,7 @@ db_password = config.get('database', 'password')
 db_name = config.get('database', 'database')
 
 try:
-# 获取mysql链接对象
+    # 获取mysql链接对象
     conn = Connection(
         host=db_host,
         user=db_user,
