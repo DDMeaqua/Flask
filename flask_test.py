@@ -71,6 +71,7 @@ def login():
 
     name = data['name']
     password = data['password']
+    print(name, password)
 
     with conn.cursor() as cursor:
         query = "SELECT * FROM user_info WHERE name = %s AND password = %s"
