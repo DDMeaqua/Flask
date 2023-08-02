@@ -65,13 +65,18 @@ def get_info():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print(data)
-    # if 'name' not in data or 'password' not in data:
-    #     return jsonify({'message': 'Missing name or password'}), 400
+    if not data:
+        return jsonify({'message': 'Invalid JSON data in the request'}), 400
 
-    name = data['name']
-    password = data['password']
-    print(name, password)
+    name = data.get('name')
+    password = data.get('password')
+
+    if not name or not password:
+        return jsonify({'message': 'Missing name or password'}), 400
+
+    print('Received login request:', data)
+    print('Username:', name)
+    print('Password:', password)
 
     with conn.cursor() as cursor:
         query = "SELECT * FROM user_info WHERE name = %s AND password = %s"
