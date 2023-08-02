@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import pymysql
 import configparser
+from flask_cors import CORS
 
 # 读取配置文件
 config = configparser.ConfigParser()
@@ -13,6 +14,7 @@ db_password = config.get('database', 'password')
 db_name = config.get('database', 'database')
 
 app = Flask(__name__)
+CORS(app)
 
 # 创建数据库连接
 conn = pymysql.connect(
