@@ -6,8 +6,8 @@
 <body>
     <h1>User Login Verification</h1>
     <form id="login-form">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <label for="name">Username:</label>
+        <input type="text" id="name" name="name" required>
         <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
@@ -19,9 +19,9 @@
     <script>
         document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            const username = document.getElementById('username').value;
+            const name = document.getElementById('name').value;
             const password = document.getElementById('password').value;
-            const data = { "username": username, "password": password };
+            const data = { "name": name, "password": password };
 
             fetch('http://118.89.67.248:8080/api/login', {
                 method: 'POST',
