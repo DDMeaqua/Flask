@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import pymysql
 import configparser
 
@@ -58,6 +58,26 @@ def get_info():
 
     # 将数据转换成 JSON 格式并返回
     return jsonify(data)
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    if 'username' not in data or 'password' not in data:
+        return jsonify({'message': 'Missing username or password'}), 400
+
+    username = data['username']
+    password = data['password']
+
+    with conn.cursor() as cursor:
+        query = "SELECT * FROM user_info WHERE username = %s AND password = %s"
+        cursor.execute(query, (username, password))
+        user = cursor.fetchone()
+
+    if user:
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
 
 
 if __name__ == '__main__':
