@@ -65,6 +65,7 @@ def get_info():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
+    print(data)
     if 'name' not in data or 'password' not in data:
         return jsonify({'message': 'Missing name or password'}), 400
 
