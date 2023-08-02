@@ -66,8 +66,8 @@ def get_info():
 def login():
     data = request.get_json()
     print(data)
-    if 'name' not in data or 'password' not in data:
-        return jsonify({'message': 'Missing name or password'}), 400
+    # if 'name' not in data or 'password' not in data:
+    #     return jsonify({'message': 'Missing name or password'}), 400
 
     name = data['name']
     password = data['password']
