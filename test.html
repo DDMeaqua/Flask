@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login Verification</title>
+</head>
+<body>
+    <h1>User Login Verification</h1>
+    <form id="login-form">
+        <label for="name">Username:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <input type="submit" value="Login">
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const password = document.getElementById('password').value;
+            const data = { "name": name, "password": password };
+
+            fetch('http://118.89.67.248:8080/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Login successful') {
+                    document.getElementById('result').textContent = 'Login successful!';
+                } else {
+                    document.getElementById('result').textContent = 'Login failed. Please check your credentials.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>

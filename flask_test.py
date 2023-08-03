@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import pymysql
 import configparser
+from flask_cors import CORS
 
 # 读取配置文件
 config = configparser.ConfigParser()
@@ -13,6 +14,7 @@ db_password = config.get('database', 'password')
 db_name = config.get('database', 'database')
 
 app = Flask(__name__)
+CORS(app)
 
 # 创建数据库连接
 conn = pymysql.connect(
@@ -58,6 +60,33 @@ def get_info():
 
     # 将数据转换成 JSON 格式并返回
     return jsonify(data)
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': 'Invalid JSON data in the request'}), 400
+
+    name = data.get('name')
+    password = data.get('password')
+
+    if not name or not password:
+        return jsonify({'message': 'Missing name or password'}), 400
+
+    print('Received login request:', data)
+    print('Username:', name)
+    print('Password:', password)
+
+    with conn.cursor() as cursor:
+        query = "SELECT * FROM user_info WHERE name = %s AND password = %s"
+        cursor.execute(query, (name, password))
+        user = cursor.fetchone()
+
+    if user:
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
 
 
 if __name__ == '__main__':
