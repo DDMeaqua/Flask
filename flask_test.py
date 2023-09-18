@@ -26,6 +26,7 @@ conn = pymysql.connect(
 )
 
 
+# http默认是80端口，https默认是443端口
 @app.route('/', methods=['GET'])
 def get_user():
     with conn.cursor() as cursor:
@@ -89,5 +90,23 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 401
 
 
+@app.route('/hello', methods=['GET'])
+def hello():
+    return 'hello world'
+
+
+@app.route('/blog/<blog_id>')
+def blog_detail(blog_id):
+    return '访问的博客是:' + blog_id
+
+
+@app.route('/book/list')
+def book_list():
+    # args 参数
+    page = request.args.get("page", default=1, type=int)
+    return f"你访问的是第{page}页的博客list"
+
+
+# debug调试模式，开发的时候用，修改host为0.0.0.0的作用是为了其它电脑能访问flask项目
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
