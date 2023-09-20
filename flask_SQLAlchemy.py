@@ -47,9 +47,26 @@ class User(db.Model):
     username = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
+    # articles = db.relationship("Article", back_populates="author")
 
-user = User(username="法外狂徒张三", password="123456")
+
+# user = User(username="法外狂徒张三", password="123456")
 # sql: insert into user(username,password) values('法外狂徒张三','123456')
+
+class Article(db.Model):
+    __tablename__ = "article"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+
+    # 添加作者的外键
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # backref:会自动给User模型添加一个articles的属性 用来获取文章列表
+    author = db.relationship("User", backref="articles")
+    # author = db.relationship("User", back_populates="articles")
+
+
+# article = Article(title="xxx小说", content="Flaskxxx")
 
 with app.app_context():
     db.create_all()
@@ -83,5 +100,44 @@ def query_user():
     return "查询成功"
 
 
+@app.route("/user/update")
+def update_user():
+    user = User.query.filter_by(username="法外狂徒张三").first()
+    user.password = "222222"
+    db.session.commit()
+    return "数据修改成功"
+
+
+@app.route("/user/delete")
+def delete_user():
+    user = User.query.get(1)
+    db.session.delete(user)
+    db.session.commit()
+    return "数据删除成功"
+
+
+@app.route("/article/add")
+def art_add():
+    article1 = Article(title="某小说", content="清晨醒来第一句话：")
+    article1.author = User.query.get(2)
+
+    article2 = Article(title="x某小说", content="清晨一句话：")
+    article2.author = User.query.get(2)
+
+    db.session.add_all([article1, article2])
+    db.session.commit()
+
+    return "小说添加成功"
+
+
+@app.route("/article/query")
+def art_query():
+    user = User.query.get(2)
+    for article in user.articles:
+        print(article.title)
+    return "文章查找成功"
+
+
 if __name__ == '__main__':
+    # app.run(host='0.0.0.0', port=8080)
     app.run(debug=True, host='0.0.0.0', port=8080)
