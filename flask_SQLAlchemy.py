@@ -1,5 +1,5 @@
 import configparser
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 
@@ -118,13 +118,13 @@ def delete_user():
 
 @app.route("/article/add")
 def art_add():
-    article1 = Article(title="某小说", content="清晨醒来第一句话：")
+    article1 = Article(title="某小说", content="yuanshen：")
     article1.author = User.query.get(2)
 
-    article2 = Article(title="x某小说", content="清晨一句话：")
-    article2.author = User.query.get(2)
+    # article2 = Article(title="x某小说", content="qidong：")
+    # article2.author = User.query.get(2)
 
-    db.session.add_all([article1, article2])
+    db.session.add_all([article1])
     db.session.commit()
 
     return "小说添加成功"
@@ -136,6 +136,31 @@ def art_query():
     for article in user.articles:
         print(article.title)
     return "文章查找成功"
+
+
+@app.route("/hello/<name>")
+def hello_name(name):
+    return f'hello {name}'
+
+
+@app.route('/set_cookies')
+def set_cookies():
+    resp = make_response("success")
+    resp.set_cookie("test", "test", max_age=100)
+    return resp
+
+
+@app.route('/get_cookies')
+def get_cookies():
+    cookie_1 = request.cookies.get("test")
+    return cookie_1
+
+
+@app.route('/delete_cookies')
+def delete_cookies():
+    resp = make_response("del success")
+    resp.delete_cookie("test")
+    return resp
 
 
 if __name__ == '__main__':
