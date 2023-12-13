@@ -26,18 +26,17 @@ PASSWORD = db_password
 # 数据库名称
 DATABASE = db_name
 
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}?charset=utf8mb4"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}?charset=utf8mb4"
 
 # 在app.config中设置好链接数据库的信息
 # 然后使用sqlalchemy(app)创建一个db对象
 # SQLAlchemy会自动的从app.config中读取链接数据库的配置信息
 db = SQLAlchemy(app)
 
-with app.app_context():
-    with db.engine.connect() as conn:
-        rs = conn.execute(text("select 1"))
-        print(rs.fetchone())
+# with app.app_context():
+#     with db.engine.connect() as conn:
+#         rs = conn.execute(text("select 1"))
+#         print(rs.fetchone())
 
 
 class User(db.Model):
